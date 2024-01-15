@@ -1,3 +1,5 @@
+This is the fork of [otdd](https://github.com/microsoft/otdd) repository by adding some functionality related to molecules and chemical space.
+
 # Optimal Transport Dataset Distance (OTDD)
 
 Codebase accompanying the papers:
