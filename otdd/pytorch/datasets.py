@@ -738,7 +738,7 @@ def combine_datasources(dset, dset_extra, valid_size=0, shuffle=True, random_see
 
 
 class FSMolDataset(torch.utils.data.Dataset):
-    """ Dataset for molecular data.
+    """ Dataset for molecular data, in particular FS-Mol dataset.
 
     Arguments:
         data (str): path to data
@@ -781,6 +781,66 @@ class FSMolDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return self.tensors[0].size(0)
+    
+
+class MoleculeDataset(torch.utils.data.Dataset):
+    """ Dataset for molecular data.
+
+    Arguments:
+        data (str): path to data
+        split (str): split to use
+        name (str): name of dataset (ChEMBL assay id)
+        featurizer (Featurizer): faeturizer to use
+        transform (callable): transform to apply to data
+        target_transform (callable): transform to apply to targets
+
+    """
+    def __init__(self, data, transform=None, target_transform=None):
+        self.data = data
+        self.transform = transform
+        self.target_transform = target_transform
+        self.classes = [0, 1]
+
+
+        X = self.data[self.get_features]
+        y = self.data['labels'].type(torch.LongTensor)
+        self.smiles = self.data['smiles']
+        self.tensors = [X, y]
+
+
+    def __getitem__(self, index):
+        x = self.tensors[0][index]
+        if self.transform:
+            x = self.transform(x)
+
+        y = self.tensors[1][index]
+        if self.target_transform:
+            y = self.target_transform(y)
+
+        return x, y
+
+    def __len__(self):
+        return self.tensors[0].size(0)
+
+
+def load_molecule_data(data, batch_size = 64, shuffle=True, transform=None, target_transform=None):
+    """ Load molecular data.
+    Arguments:
+        dataname (str): name of dataset (ChEMBL assay id)
+        batch_size (int): batch size
+        shuffle (bool): whether to shuffle data
+        transform (callable): transform to apply to data
+        target_transform (callable): transform to apply to targets
+
+    Returns:
+        train_loader (DataLoader): train dataloader
+
+
+    """
+    dataset = MoleculeDataset(data)
+    dataset_loader = dataloader.DataLoader(dataset, batch_size= batch_size, shuffle=shuffle)
+
+    return dataset_loader
 
 
 def load_fsmol_data(dataname: str, task='test', split='train', featurizer='desc2D', batch_size = 64, shuffle=True, transform=None, target_transform=None):
