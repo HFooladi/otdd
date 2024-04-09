@@ -783,7 +783,7 @@ class FSMolDataset(torch.utils.data.Dataset):
         return self.tensors[0].size(0)
     
 
-class MoleculeDataset(torch.utils.data.Dataset):
+class MolDataset(torch.utils.data.Dataset):
     """ Dataset for molecular data.
 
     Arguments:
@@ -842,7 +842,7 @@ def load_molecule_data(data, batch_size = 64, shuffle=True, transform=None, targ
 
 
     """
-    dataset = MoleculeDataset(data)
+    dataset = MolDataset(data)
     dataset_loader = dataloader.DataLoader(dataset, batch_size= batch_size, shuffle=shuffle)
 
     return dataset_loader
