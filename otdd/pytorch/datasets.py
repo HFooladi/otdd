@@ -809,7 +809,7 @@ class MolDataset(torch.utils.data.Dataset):
             y = torch.from_numpy(self.data.get_labels).type(torch.LongTensor)
         else:
             y = self.data.get_labels.type(torch.LongTensor)
-        self.smiles = self.data['smiles']
+        self.smiles = self.data.get_smiles
         self.tensors = [X, y]
 
 
