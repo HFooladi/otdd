@@ -801,12 +801,14 @@ class MoleculeDataset(torch.utils.data.Dataset):
         self.target_transform = target_transform
         self.classes = [0, 1]
 
-
-        X = self.data[self.data.get_features]
-        if isinstance(self.data.get_labels, np.ndarray):
-            y = torch.from_numpy(self.data['labels']).type(torch.LongTensor)
+        if isinstance(self.data.get_features, np.ndarray):
+            X = torch.from_numpy(self.data.get_features)
         else:
-            y = self.data['labels'].type(torch.LongTensor)
+            X = self.data.get_features
+        if isinstance(self.data.get_labels, np.ndarray):
+            y = torch.from_numpy(self.data.get_labels).type(torch.LongTensor)
+        else:
+            y = self.data.get_labels.type(torch.LongTensor)
         self.smiles = self.data['smiles']
         self.tensors = [X, y]
 
